@@ -23,6 +23,16 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           feedback: ${{ steps.events.outputs.reports }}
+          
+      - name: publish package
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://npm.pkg.github.com/
+      - run: cd sample-packages && npm ci
+      - run: cd sample-packages && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
   troubleshoot-activity:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
